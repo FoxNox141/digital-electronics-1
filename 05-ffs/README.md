@@ -19,7 +19,7 @@ begin
         if rising_edge(clk) then  -- Synchronous process
             if(rst='1') then
                 sig_q<='0';               
-           		elsif(J='0' and K='0') then
+           		 elsif(J='0' and K='0') then
                 sig_q <= sig_q;
   
             elsif(J='1' and K='0') then
