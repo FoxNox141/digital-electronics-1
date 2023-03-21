@@ -31,6 +31,7 @@ entity cnt_up_down is
   port (
     clk    : in    std_logic; --! Main clock
     rst    : in    std_logic; --! Synchronous reset
+    
     en     : in    std_logic; --! Enable input
     cnt_up : in    std_logic; --! Direction of the counter
     cnt    : out   std_logic_vector(g_CNT_WIDTH - 1 downto 0)
