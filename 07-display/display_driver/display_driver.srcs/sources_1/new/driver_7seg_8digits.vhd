@@ -1,6 +1,6 @@
 ----------------------------------------------------------
 --
---! @title Driver for 4-digit 7-segment display
+--! @title Driver for 8-digit 7-segment display
 --! @author Tomas Fryza
 --! Dept. of Radio Electronics, Brno Univ. of Technology, Czechia
 --!
@@ -27,43 +27,43 @@ library ieee;
 --        --/--| data1(3:0)        |
 --        --/--| data2(3:0)        |
 --        --/--| data3(3:0)        |
---          4  |           dig(3:0)|--/--
---        --/--| dp_vect(3:0)      |  4
+--        --/--| data4(3:0)        |
+--        --/--| data5(3:0)        |
+--        --/--| data6(3:0)        |
+--        --/--| data7(3:0)        |
+--          4  |           dig(7:0)|--/--
+--        --/--| dp_vect(7:0)      |  4
 --          4  +-------------------+
 --
 -- Inputs:
 --   clk          -- Main clock
 --   rst          -- Synchronous reset
---   dataX(3:0)   -- Data values for individual digits
---   dp_vect(3:0) -- Decimal points for individual digits
+--   dataX(7:0)   -- Data values for individual digits
+--   dp_vect(7:0) -- Decimal points for individual digits
 --
 -- Outputs:
 --   dp:          -- Decimal point for specific digit
 --   seg(6:0)     -- Cathode values for individual segments
---   dig(3:0)     -- Common anode signals to individual digits
+--   dig(7:0)     -- Common anode signals to individual digits
 --
 ----------------------------------------------------------
 
 entity driver_7seg_8digits is
-generic (
-    g_cnt_width : natural := 4 --! Number of clk pulses to generate one enable signal period
-  );          
   port (
     clk     : in    std_logic;
     rst     : in    std_logic;
-    
-    data0   : in    std_logic_vector(6 downto 0);
-    data1   : in    std_logic_vector(6 downto 0);
-    data2   : in    std_logic_vector(6 downto 0);
-    data3   : in    std_logic_vector(6 downto 0);
-    data4   : in    std_logic_vector(6 downto 0);
-    data5   : in    std_logic_vector(6 downto 0);
-    data6   : in    std_logic_vector(6 downto 0);
-    
-    dp_vect : in    std_logic_vector(6 downto 0);
+    data0   : in    std_logic_vector(3 downto 0);
+    data1   : in    std_logic_vector(3 downto 0);
+    data2   : in    std_logic_vector(3 downto 0);
+    data3   : in    std_logic_vector(3 downto 0);
+    data4   : in    std_logic_vector(3 downto 0);
+    data5   : in    std_logic_vector(3 downto 0);
+    data6   : in    std_logic_vector(3 downto 0);
+    data7   : in    std_logic_vector(3 downto 0);
+    dp_vect : in    std_logic_vector(7 downto 0);
     dp      : out   std_logic;
     seg     : out   std_logic_vector(6 downto 0);
-    dig     : out   std_logic_vector(6 downto 0)
+    dig     : out   std_logic_vector(7 downto 0)
   );
 end entity driver_7seg_8digits;
 
@@ -75,12 +75,10 @@ architecture behavioral of driver_7seg_8digits is
 
   -- Internal clock enable
   signal sig_en_4ms : std_logic;
-
-  -- Internal 2-bit counter for multiplexing 4 digits
-  signal sig_cnt_2bit : std_logic_vector(1 downto 0);
-
+  -- Internal 3-bit counter for multiplexing 4 digits
+  signal sig_cnt_3bit : std_logic_vector(2 downto 0);
   -- Internal 4-bit value for 7-segment decoder
-  signal sig_hex : std_logic_vector(6 downto 0);
+  signal sig_hex : std_logic_vector(3 downto 0);
 
 begin
 
@@ -90,16 +88,16 @@ begin
   --------------------------------------------------------
   clk_en0 : entity work.clock_enable
     generic map (
-      -- FOR SIMULATION, KEEP THIS VALUE TO 4
-      -- FOR IMPLEMENTATION, CHANGE THIS VALUE TO 400,000
-      -- 4      @ 4 ns
-      -- 400000 @ 4 ms
-      g_MAX => 400000
+      -- FOR SIMULATION, KEEP THIS VALUE TO 2
+      -- FOR IMPLEMENTATION, CHANGE THIS VALUE TO 200,000
+      -- 2      @ 2 ns
+      -- 200000 @ 2 ms
+      g_max => 2
     )
     port map (
-      clk =>  clk,
-      rst =>  rst,
-      ce  =>  sig_en_4ms
+      clk => clk,
+      rst => rst,
+      ce  => sig_en_4ms
     );
 
   --------------------------------------------------------
@@ -107,18 +105,16 @@ begin
   -- a 2-bit down counter
   --------------------------------------------------------
   bin_cnt0 : entity work.cnt_up_down
-  
     generic map (
-      g_CNT_WIDTH => 2
+      g_CNT_WIDTH => 3
     )
     port map (
-      clk =>  clk,
-      rst =>  rst,
-      en  =>  sig_en_4ms,
+      clk => clk,
+      rst => rst,
+      en => sig_en_4ms,
       cnt_up => '0',
-      cnt => sig_cnt_2bit
-      
-      );
+      cnt => sig_cnt_3bit
+    );
 
   --------------------------------------------------------
   -- Instance (copy) of hex_7seg entity performs
@@ -144,30 +140,51 @@ begin
       if (rst = '1') then
         sig_hex <= data0;
         dp      <= dp_vect(0);
-        dig     <= "1110";
+        dig     <= "11111110";
       else
 
-        case sig_cnt_2bit is
+        case sig_cnt_3bit is
+          
+          when "111" =>
+            sig_hex <= data7;
+            dp      <= dp_vect(3);
+            dig     <= "01111111";
 
-          when "11" =>
+          when "110" =>
+            sig_hex <= data6;
+            dp      <= dp_vect(2);
+            dig     <= "10111111";
+            
+          when "101" =>
+            sig_hex <= data5;
+            dp      <= dp_vect(1);
+            dig     <= "11011111";
+            
+          when "100" =>
+            sig_hex <= data4;
+            dp      <= dp_vect(0);
+            dig     <= "11101111";
+
+          when "011" =>
             sig_hex <= data3;
             dp      <= dp_vect(3);
-            dig     <= "0111";
-          when "10" =>
+            dig     <= "11110111";
+
+          when "010" =>
             sig_hex <= data2;
             dp      <= dp_vect(2);
-            dig     <= "1011";
-
-          when "01" =>
+            dig     <= "11111011";
+            
+          when "001" =>
             sig_hex <= data1;
             dp      <= dp_vect(1);
-            dig     <= "1101";
-
+            dig     <= "11111101";
+            
           when others =>
             sig_hex <= data0;
             dp      <= dp_vect(0);
-            dig     <= "1110";
-
+            dig     <= "11111110";
+            
         end case;
 
       end if;
