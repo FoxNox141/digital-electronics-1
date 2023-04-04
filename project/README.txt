@@ -1,60 +1,104 @@
-# VHDL project
+# Lab 8: Erik Maděránek (240656)
 
-### Topics
+### Traffic light controller
 
-* Úterní skupiny: UART (Universal Asynchronous Receiver/Transmitter) vysílač a přijímač. 
-* Středa: Vysílač a přijímač Morseova kódu. 
-* Čtvrtek: Časovač na intervalový (kruhový) trénink s možností nastavit počet kol, dobu kola a pauzy mezi nimi za běhu aplikace.
+1. Listing of VHDL code of the completed process `p_traffic_fsm`. Always use syntax highlighting, meaningful comments, and follow VHDL guidelines:
 
-## Instructions
+```vhdl
+    --------------------------------------------------------
+    -- p_traffic_fsm:
+    -- A sequential process with synchronous reset and
+    -- clock_enable entirely controls the s_state signal by
+    -- CASE statement.
+    --------------------------------------------------------
+    p_traffic_fsm : process (clk) is
+  begin
 
-The aim of the project is to cooperate in small teams, to study the subject, to design own solutions, to simulate, to implement, to create project documentation and to demonstrate the results. The distribution of roles and tasks within the team belongs to its members.
+    if (rising_edge(clk)) then
+      if (rst = '1') then                    -- Synchronous reset
+        sig_state <= WEST_STOP;              -- Init state
+        sig_cnt   <= c_ZERO;                 -- Clear delay counter
+      elsif (sig_en = '1') then
+        -- Every 250 ms, CASE checks the value of sig_state
+        -- local signal and changes to the next state 
+        -- according to the delay value.
+        case sig_state is
 
-* Students work on a project in the labs during the 9th to 13th week of the semester. The practical demonstration will take place last week.
+          when WEST_STOP =>
+            -- Count up to c_DELAY_2SEC
+            if (sig_cnt < c_DELAY_2SEC) then
+              sig_cnt <= sig_cnt + 1;
+            else
+              -- Move to the next state
+              sig_state <= WEST_GO;
+              -- Reset local counter value
+              sig_cnt <= c_ZERO;
+            end if;
 
-* Using BUT e-learning, students submit a link to the GitHub repository, which contains the project in Vivado, the necessary images, documents and a descriptive README file. **The submission deadline is the day before the demonstration.**
+          when WEST_GO =>
+            -- Count up to c_DELAY_2SEC
+            if (sig_cnt < c_DELAY_4SEC) then
+              sig_cnt <= sig_cnt + 1;
+            else
+              -- Move to the next state
+              sig_state <= WEST_WAIT;
+              -- Reset local counter value
+              sig_cnt <= c_ZERO;
+            end if;
+            
+           when WEST_WAIT =>
+            -- Count up to c_DELAY_2SEC
+            if (sig_cnt < c_DELAY_1SEC) then
+              sig_cnt <= sig_cnt + 1;
+            else
+              -- Move to the next state
+              sig_state <= SOUTH_STOP;
+              -- Reset local counter value
+              sig_cnt <= c_ZERO;
+            end if;
+            
+            when SOUTH_STOP =>
+            -- Count up to c_DELAY_2SEC
+            if (sig_cnt < c_DELAY_2SEC) then
+              sig_cnt <= sig_cnt + 1;
+            else
+              -- Move to the next state
+              sig_state <= SOUTH_GO;
+              -- Reset local counter value
+              sig_cnt <= c_ZERO;
+            end if;
+            
+            when SOUTH_GO =>
+            -- Count up to c_DELAY_2SEC
+            if (sig_cnt < c_DELAY_4SEC) then
+              sig_cnt <= sig_cnt + 1;
+            else
+              -- Move to the next state
+              sig_state <= SOUTH_WAIT;
+              -- Reset local counter value
+              sig_cnt <= c_ZERO;
+            end if;
 
-* The FPGA source codes must be written in VHDL and implementable on the Nexys A7-50T board in the development tools used in the laboratory during the semester.
+          when SOUTH_WAIT =>
+            -- Count up to c_DELAY_2SEC
+            if (sig_cnt < c_DELAY_1SEC) then
+              sig_cnt <= sig_cnt + 1;
+            else
+            sig_state <= WEST_STOP;
+            sig_cnt   <= c_ZERO;
+            
+           end if;
+        end case;
 
-* Make testbenches for all your new components.
+      end if; -- Synchronous reset
+    end if; -- Rising edge
+  end process p_traffic_fsm;
+```
 
-* Physical implementation on FPGA is necessary, computer simulation is not sufficient.
+2. Screenshot with simulated time waveforms. The full functionality of the entity must be verified. Always display all inputs and outputs (display the inputs at the top of the image, the outputs below them) at the appropriate time scale!
 
-## Help:
+   ![your figure](Capture.PNG)
 
-**Never, ever** use `rising_edge` or `falling_edge` to test edges of non-clock signals under any circumstances!
+3. Figure of Moor-based state diagram of the traffic light controller with *speed button* to ensure a synchronous transition to the `WEST_GO` state. The image can be drawn on a computer or by hand. Always name all states, transitions, and input signals!
 
-In a synchronous process, the first thing to do is test the clock edge, then synchronous reset. The only exception is asynchronous operations.
-
-# Recommended README.md file structure
-
-### Team members
-
-* Member 1 (responsible for ...)
-* Member 2 (responsible for ...)
-* Member 3 (responsible for ...)
-
-## Theoretical description and explanation
-
-Enter a description of the problem and how to solve it.
-
-## Hardware description of demo application
-
-Insert descriptive text and schematic(s) of your implementation.
-
-## Software description
-
-Put flowchats/state diagrams of your algorithm(s) and direct links to source/testbench files in `src` and `sim` folders. 
-
-### Component(s) simulation
-
-Write descriptive text and simulation screenshots of your components.
-
-## Instructions
-
-Write an instruction manual for your application, including photos or a link to a video.
-
-## References
-
-1. Put here the literature references you used.
-2. ...
+   ![your figure](moor-diagram.PNG)
