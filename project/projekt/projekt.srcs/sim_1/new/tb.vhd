@@ -10,7 +10,7 @@ end uart_tb;
  
 architecture behave of uart_tb is
  
-  component uart_tx is
+  component transmitter is
     generic (
       g_CLKS_PER_BIT : integer := 115   -- Needs to be set correctly
       );
@@ -22,9 +22,9 @@ architecture behave of uart_tb is
       o_tx_serial : out std_logic;
       o_tx_done   : out std_logic
       );
-  end component uart_tx;
+  end component transmitter;
  
-  component uart_rx is
+  component receiver is
     generic (
       g_CLKS_PER_BIT : integer := 115   -- Needs to be set correctly
       );
@@ -34,7 +34,7 @@ architecture behave of uart_tb is
       o_rx_dv     : out std_logic;
       o_rx_byte   : out std_logic_vector(7 downto 0)
       );
-  end component uart_rx;
+  end component receiver;
  
    
   -- Test Bench uses a 10 MHz Clock
@@ -73,19 +73,22 @@ architecture behave of uart_tb is
     -- Send Stop Bit
     o_serial <= '1'; wait for c_BIT_PERIOD; end UART_WRITE_BYTE; 
     
-  begin -- Instantiate UART transmitter UART_TX_INST : uart_tx generic map ( g_CLKS_PER_BIT => c_CLKS_PER_BIT)
-   
-    port map (
+  begin -- Instantiate UART transmitter
+   UART_TX_INST : transmitter 
+   generic map ( 
+   g_CLKS_PER_BIT => c_CLKS_PER_BIT
+   )
+    port map(
       i_clk       => r_CLOCK,
       i_tx_dv     => r_TX_DV,
       i_tx_byte   => r_TX_BYTE,
-      o_tx_active => open,
+      o_TX_Active => open,
       o_tx_serial => w_TX_SERIAL,
       o_tx_done   => w_TX_DONE
       );
  
   -- Instantiate UART Receiver
-  UART_RX_INST : uart_rx
+  UART_RX_INST : receiver
     generic map (
       g_CLKS_PER_BIT => c_CLKS_PER_BIT
       )

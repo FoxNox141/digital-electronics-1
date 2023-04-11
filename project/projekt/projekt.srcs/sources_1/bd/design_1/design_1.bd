@@ -1,0 +1,228 @@
+{
+  "design": {
+    "design_info": {
+      "boundary_crc": "0x0",
+      "device": "xc7a50ticsg324-1L",
+      "gen_directory": "../../../../projekt.gen/sources_1/bd/design_1",
+      "name": "design_1",
+      "rev_ctrl_bd_flag": "RevCtrlBdOff",
+      "synth_flow_mode": "Hierarchical",
+      "tool_version": "2020.2",
+      "validated": "true"
+    },
+    "design_tree": {
+      "top_0": "",
+      "UART_TX_0": "",
+      "UART_RX_0": "",
+      "sim_clk_gen_0": ""
+    },
+    "components": {
+      "top_0": {
+        "vlnv": "xilinx.com:module_ref:top:1.0",
+        "xci_name": "design_1_top_0_0",
+        "xci_path": "ip\\design_1_top_0_0\\design_1_top_0_0.xci",
+        "inst_hier_path": "top_0",
+        "reference_info": {
+          "ref_type": "hdl",
+          "ref_name": "top",
+          "boundary_crc": "0x0"
+        },
+        "ports": {
+          "i_tx_data": {
+            "direction": "I",
+            "left": "7",
+            "right": "0"
+          },
+          "i_tx_data_valid": {
+            "direction": "I"
+          },
+          "o_tx_serial": {
+            "direction": "O"
+          },
+          "o_tx_ready": {
+            "direction": "O"
+          },
+          "i_rx_serial": {
+            "direction": "I"
+          },
+          "o_rx_data": {
+            "direction": "O",
+            "left": "7",
+            "right": "0"
+          },
+          "o_rx_data_valid": {
+            "direction": "O"
+          },
+          "clk": {
+            "type": "clk",
+            "direction": "I",
+            "parameters": {
+              "ASSOCIATED_RESET": {
+                "value": "rst",
+                "value_src": "constant"
+              },
+              "FREQ_HZ": {
+                "value": "100000000",
+                "value_src": "user_prop"
+              },
+              "CLK_DOMAIN": {
+                "value": "design_1_sim_clk_gen_0_0_clk",
+                "value_src": "default_prop"
+              }
+            }
+          },
+          "rst": {
+            "type": "rst",
+            "direction": "I",
+            "parameters": {
+              "POLARITY": {
+                "value": "ACTIVE_LOW",
+                "value_src": "user_prop"
+              }
+            }
+          }
+        }
+      },
+      "UART_TX_0": {
+        "vlnv": "xilinx.com:module_ref:UART_TX:1.0",
+        "xci_name": "design_1_UART_TX_0_1",
+        "xci_path": "ip\\design_1_UART_TX_0_1\\design_1_UART_TX_0_1.xci",
+        "inst_hier_path": "UART_TX_0",
+        "reference_info": {
+          "ref_type": "hdl",
+          "ref_name": "UART_TX",
+          "boundary_crc": "0x0"
+        },
+        "ports": {
+          "i_Clk": {
+            "type": "clk",
+            "direction": "I",
+            "parameters": {
+              "FREQ_HZ": {
+                "value": "100000000",
+                "value_src": "user_prop"
+              },
+              "CLK_DOMAIN": {
+                "value": "design_1_sim_clk_gen_0_0_clk",
+                "value_src": "default_prop"
+              }
+            }
+          },
+          "i_TX_DV": {
+            "direction": "I"
+          },
+          "i_TX_Byte": {
+            "direction": "I",
+            "left": "7",
+            "right": "0"
+          },
+          "o_TX_Active": {
+            "direction": "O"
+          },
+          "o_TX_Serial": {
+            "direction": "O"
+          },
+          "o_TX_Done": {
+            "direction": "O"
+          }
+        }
+      },
+      "UART_RX_0": {
+        "vlnv": "xilinx.com:module_ref:UART_RX:1.0",
+        "xci_name": "design_1_UART_RX_0_1",
+        "xci_path": "ip\\design_1_UART_RX_0_1\\design_1_UART_RX_0_1.xci",
+        "inst_hier_path": "UART_RX_0",
+        "reference_info": {
+          "ref_type": "hdl",
+          "ref_name": "UART_RX",
+          "boundary_crc": "0x0"
+        },
+        "ports": {
+          "i_Clk": {
+            "type": "clk",
+            "direction": "I",
+            "parameters": {
+              "FREQ_HZ": {
+                "value": "100000000",
+                "value_src": "user_prop"
+              },
+              "CLK_DOMAIN": {
+                "value": "design_1_sim_clk_gen_0_0_clk",
+                "value_src": "default_prop"
+              }
+            }
+          },
+          "i_RX_Serial": {
+            "direction": "I"
+          },
+          "o_RX_DV": {
+            "direction": "O"
+          },
+          "o_RX_Byte": {
+            "direction": "O",
+            "left": "7",
+            "right": "0"
+          }
+        }
+      },
+      "sim_clk_gen_0": {
+        "vlnv": "xilinx.com:ip:sim_clk_gen:1.0",
+        "xci_name": "design_1_sim_clk_gen_0_0",
+        "xci_path": "ip\\design_1_sim_clk_gen_0_0\\design_1_sim_clk_gen_0_0.xci",
+        "inst_hier_path": "sim_clk_gen_0"
+      }
+    },
+    "nets": {
+      "UART_TX_0_o_TX_Serial": {
+        "ports": [
+          "UART_TX_0/o_TX_Serial",
+          "top_0/i_rx_serial"
+        ]
+      },
+      "top_0_o_tx_serial": {
+        "ports": [
+          "top_0/o_tx_serial",
+          "UART_RX_0/i_RX_Serial"
+        ]
+      },
+      "UART_RX_0_o_RX_Byte": {
+        "ports": [
+          "UART_RX_0/o_RX_Byte",
+          "top_0/i_tx_data"
+        ]
+      },
+      "top_0_o_rx_data": {
+        "ports": [
+          "top_0/o_rx_data",
+          "UART_TX_0/i_TX_Byte"
+        ]
+      },
+      "Net": {
+        "ports": [
+          "sim_clk_gen_0/clk",
+          "UART_RX_0/i_Clk",
+          "top_0/clk",
+          "UART_TX_0/i_Clk"
+        ]
+      },
+      "top_0_o_tx_ready": {
+        "ports": [
+          "top_0/o_tx_ready",
+          "UART_TX_0/i_TX_DV"
+        ]
+      },
+      "UART_RX_0_o_RX_DV": {
+        "ports": [
+          "UART_RX_0/o_RX_DV",
+          "top_0/i_tx_data_valid"
+        ]
+      },
+      "sim_clk_gen_0_sync_rst": {
+        "ports": [
+          "sim_clk_gen_0/sync_rst",
+          "top_0/rst"
+        ]
+      }
+    }
+  }
+}
