@@ -4,7 +4,7 @@ Team members
 * Erik Maděránek
 
 Theoretical description and explanation
-UART stands for Universal Asynchronous Receiver/Transmitter. It is a type of hardware interface used for serial communication between two devices. It allows for the transmission and reception of data in a serial format, and is commonly used in microcontrollers, embedded systems, and other electronic devices for communication with other devices or systems. UART uses two data lines, one for transmitting data (TX) and one for receiving data (RX), as well as a common ground reference.
+* UART stands for Universal Asynchronous Receiver/Transmitter. It is a type of hardware interface used for serial communication between two devices. It allows for the transmission and reception of data in a serial format, and is commonly used in microcontrollers, embedded systems, and other electronic devices for communication with other devices or systems. UART uses two data lines, one for transmitting data (TX) and one for receiving data (RX), as well as a common ground reference.
 
 Hardware description of demo application
 Insert descriptive text and schematic(s) of your implementation.
