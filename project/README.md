@@ -1,104 +1,19 @@
-# Lab 8: Erik Maděránek (240656)
+Team members
+Roman Křivánek
+Michal Lexa
+Erik Maděránek
 
-### Traffic light controller
+Theoretical description and explanation
+UART stands for Universal Asynchronous Receiver/Transmitter. It is a type of hardware interface used for serial communication between two devices. It allows for the transmission and reception of data in a serial format, and is commonly used in microcontrollers, embedded systems, and other electronic devices for communication with other devices or systems. UART uses two data lines, one for transmitting data (TX) and one for receiving data (RX), as well as a common ground reference.
 
-1. Listing of VHDL code of the completed process `p_traffic_fsm`. Always use syntax highlighting, meaningful comments, and follow VHDL guidelines:
+Hardware description of demo application
+Insert descriptive text and schematic(s) of your implementation.
 
-```vhdl
-    --------------------------------------------------------
-    -- p_traffic_fsm:
-    -- A sequential process with synchronous reset and
-    -- clock_enable entirely controls the s_state signal by
-    -- CASE statement.
-    --------------------------------------------------------
-    p_traffic_fsm : process (clk) is
-  begin
+Software description
+Put flowchats/state diagrams of your algorithm(s) and direct links to source/testbench files in src and sim folders.
 
-    if (rising_edge(clk)) then
-      if (rst = '1') then                    -- Synchronous reset
-        sig_state <= WEST_STOP;              -- Init state
-        sig_cnt   <= c_ZERO;                 -- Clear delay counter
-      elsif (sig_en = '1') then
-        -- Every 250 ms, CASE checks the value of sig_state
-        -- local signal and changes to the next state 
-        -- according to the delay value.
-        case sig_state is
+Component(s) simulation
+Write descriptive text and simulation screenshots of your components.
 
-          when WEST_STOP =>
-            -- Count up to c_DELAY_2SEC
-            if (sig_cnt < c_DELAY_2SEC) then
-              sig_cnt <= sig_cnt + 1;
-            else
-              -- Move to the next state
-              sig_state <= WEST_GO;
-              -- Reset local counter value
-              sig_cnt <= c_ZERO;
-            end if;
-
-          when WEST_GO =>
-            -- Count up to c_DELAY_2SEC
-            if (sig_cnt < c_DELAY_4SEC) then
-              sig_cnt <= sig_cnt + 1;
-            else
-              -- Move to the next state
-              sig_state <= WEST_WAIT;
-              -- Reset local counter value
-              sig_cnt <= c_ZERO;
-            end if;
-            
-           when WEST_WAIT =>
-            -- Count up to c_DELAY_2SEC
-            if (sig_cnt < c_DELAY_1SEC) then
-              sig_cnt <= sig_cnt + 1;
-            else
-              -- Move to the next state
-              sig_state <= SOUTH_STOP;
-              -- Reset local counter value
-              sig_cnt <= c_ZERO;
-            end if;
-            
-            when SOUTH_STOP =>
-            -- Count up to c_DELAY_2SEC
-            if (sig_cnt < c_DELAY_2SEC) then
-              sig_cnt <= sig_cnt + 1;
-            else
-              -- Move to the next state
-              sig_state <= SOUTH_GO;
-              -- Reset local counter value
-              sig_cnt <= c_ZERO;
-            end if;
-            
-            when SOUTH_GO =>
-            -- Count up to c_DELAY_2SEC
-            if (sig_cnt < c_DELAY_4SEC) then
-              sig_cnt <= sig_cnt + 1;
-            else
-              -- Move to the next state
-              sig_state <= SOUTH_WAIT;
-              -- Reset local counter value
-              sig_cnt <= c_ZERO;
-            end if;
-
-          when SOUTH_WAIT =>
-            -- Count up to c_DELAY_2SEC
-            if (sig_cnt < c_DELAY_1SEC) then
-              sig_cnt <= sig_cnt + 1;
-            else
-            sig_state <= WEST_STOP;
-            sig_cnt   <= c_ZERO;
-            
-           end if;
-        end case;
-
-      end if; -- Synchronous reset
-    end if; -- Rising edge
-  end process p_traffic_fsm;
-```
-
-2. Screenshot with simulated time waveforms. The full functionality of the entity must be verified. Always display all inputs and outputs (display the inputs at the top of the image, the outputs below them) at the appropriate time scale!
-
-   ![your figure](Capture.PNG)
-
-3. Figure of Moor-based state diagram of the traffic light controller with *speed button* to ensure a synchronous transition to the `WEST_GO` state. The image can be drawn on a computer or by hand. Always name all states, transitions, and input signals!
-
-   ![your figure](moor-diagram.PNG)
+Instructions
+Write an instruction manual for your application, including photos or a link to a video.
